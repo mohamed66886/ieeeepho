@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 previewImage.src = event.target.result;
                 imagePreview.classList.remove('d-none');
                 
-                // تهيئة أداة الاقتصاص
                 if (cropper) {
                     cropper.destroy();
                 }
@@ -27,27 +26,45 @@ document.addEventListener('DOMContentLoaded', function() {
                 cropper = new Cropper(previewImage, {
                     aspectRatio: requiredWidth / requiredHeight,
                     viewMode: 1,
-                    autoCropArea: 1,
+                    autoCropArea: 0.8, // مساحة اقتصاص أولية 80%
                     responsive: true,
                     guides: true,
-                    movable: false,
+                    movable: true, // تمكين الحركة لتعديل الموضع
                     rotatable: false,
-                    scalable: false,
-                    zoomable: false,
+                    scalable: true, // تمكين التكبير/التصغير
+                    zoomable: true, // تمكين الزوم
+                    zoomOnTouch: true,
+                    zoomOnWheel: true,
+                    cropBoxMovable: true,
                     cropBoxResizable: true,
-                    minCropBoxWidth: requiredWidth,
-                    minCropBoxHeight: requiredHeight,
+                    minCropBoxWidth: 100, // أصغر حجم مسموح
+                    minCropBoxHeight: 100,
                     ready() {
-                        // تحديد منطقة الاقتصاص المطلوبة تلقائياً
                         const containerData = cropper.getContainerData();
-                        const widthRatio = containerData.width / requiredWidth;
-                        const heightRatio = containerData.height / requiredHeight;
-                        const ratio = Math.min(widthRatio, heightRatio);
+                        const aspectRatio = requiredWidth / requiredHeight;
+                        
+                        // حساب الحجم الأولي بناءً على حجم الحاوية
+                        let initWidth = containerData.width * 0.8;
+                        let initHeight = initWidth / aspectRatio;
+                        
+                        if (initHeight > containerData.height * 0.8) {
+                            initHeight = containerData.height * 0.8;
+                            initWidth = initHeight * aspectRatio;
+                        }
                         
                         cropper.setCropBoxData({
-                            width: requiredWidth * ratio,
-                            height: requiredHeight * ratio
+                            width: initWidth,
+                            height: initHeight
                         });
+                    },
+                    crop(event) {
+                        // الحفاظ على النسبة الثابتة أثناء التعديل
+                        if (event.detail.width) {
+                            const newHeight = event.detail.width / (requiredWidth / requiredHeight);
+                            cropper.setCropBoxData({
+                                height: newHeight
+                            });
+                        }
                     }
                 });
             };
