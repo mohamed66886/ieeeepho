@@ -6,6 +6,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const generateBtn = document.getElementById('generateBtn');
     const downloadBtn = document.getElementById('downloadBtn');
     const outputImage = document.getElementById('outputImage');
+    const cropCheckbox = document.createElement('input');
+    cropCheckbox.type = 'checkbox';
+    cropCheckbox.id = 'cropCheckbox';
+    
+    const cropLabel = document.createElement('label');
+    cropLabel.htmlFor = 'cropCheckbox';
+    cropLabel.textContent = ' اقتصاص الصورة إلى 445×470';
+    cropLabel.style.marginLeft = '5px';
+    cropLabel.style.color = '#fff';
+    
+    const cropContainer = document.createElement('div');
+    cropContainer.style.margin = '15px 0';
+    cropContainer.appendChild(cropCheckbox);
+    cropContainer.appendChild(cropLabel);
+    
+    document.querySelector('.card-body').insertBefore(cropContainer, generateBtn);
 
     uploadInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
@@ -21,12 +37,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     generateBtn.addEventListener('click', function() {
         if (!previewImage.src || previewImage.src.includes('template.png')) {
-            alert('Please upload an image first');
+            alert('الرجاء رفع صورة أولاً');
             return;
         }
 
         if (!nameInput.value) {
-            alert('Please enter your name');
+            alert('الرجاء إدخال الاسم');
             return;
         }
 
@@ -44,22 +60,53 @@ document.addEventListener('DOMContentLoaded', function() {
             userImg.src = previewImage.src;
             
             userImg.onload = function() {
-                const userAspect = userImg.width / userImg.height;
-                const templateAspect = templateImg.width / templateImg.height;
-                
-                let drawWidth, drawHeight, offsetX = 0, offsetY = 0;
-                
-                if (userAspect > templateAspect) {
-                    drawHeight = canvas.height;
-                    drawWidth = drawHeight * userAspect;
-                    offsetX = (canvas.width - drawWidth) / 2;
+                if (cropCheckbox.checked) {
+                    const cropWidth = 445;
+                    const cropHeight = 470;
+                    
+                    const cropCanvas = document.createElement('canvas');
+                    cropCanvas.width = cropWidth;
+                    cropCanvas.height = cropHeight;
+                    const cropCtx = cropCanvas.getContext('2d');
+                    
+                    const sourceAspect = userImg.width / userImg.height;
+                    const cropAspect = cropWidth / cropHeight;
+                    
+                    let sourceX = 0, sourceY = 0, sourceWidth = userImg.width, sourceHeight = userImg.height;
+                    
+                    if (sourceAspect > cropAspect) {
+                        sourceWidth = userImg.height * cropAspect;
+                        sourceX = (userImg.width - sourceWidth) / 2;
+                    } else {
+                        sourceHeight = userImg.width / cropAspect;
+                        sourceY = (userImg.height - sourceHeight) / 2;
+                    }
+                    
+                    cropCtx.drawImage(userImg, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, cropWidth, cropHeight);
+                    
+                    const posX = canvas.width - cropWidth - 340;
+                    const posY = canvas.height - cropHeight - 470;
+                    
+                    ctx.drawImage(cropCanvas, posX, posY, cropWidth, cropHeight);
                 } else {
-                    drawWidth = canvas.width;
-                    drawHeight = drawWidth / userAspect;
-                    offsetY = (canvas.height - drawHeight) / 2;
+                    const userAspect = userImg.width / userImg.height;
+                    const templateAspect = templateImg.width / templateImg.height;
+                    
+                    let drawWidth, drawHeight, offsetX = 0, offsetY = 0;
+                    
+                    if (userAspect > templateAspect) {
+                        drawHeight = canvas.height;
+                        drawWidth = drawHeight * userAspect;
+                        offsetX = (canvas.width - drawWidth) / 2;
+                    } else {
+                        drawWidth = canvas.width;
+                        drawHeight = drawWidth / userAspect;
+                        offsetY = (canvas.height - drawHeight) / 2;
+                    }
+                    
+                    ctx.drawImage(userImg, offsetX, offsetY, drawWidth, drawHeight);
                 }
                 
-                ctx.drawImage(userImg, offsetX, offsetY, drawWidth, drawHeight);
                 ctx.drawImage(templateImg, 0, 0);
                 
                 ctx.font = 'bold 28px Poppins';
