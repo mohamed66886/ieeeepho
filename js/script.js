@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const outputImage = document.getElementById('outputImage');
     
     let cropper;
-    const requiredWidth = 445;
-    const requiredHeight = 470;
+    const requiredWidth = 555;
+    const requiredHeight = 605;
 
     uploadInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
@@ -26,24 +26,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 cropper = new Cropper(previewImage, {
                     aspectRatio: requiredWidth / requiredHeight,
                     viewMode: 1,
-                    autoCropArea: 0.8, // مساحة اقتصاص أولية 80%
+                    autoCropArea: 0.8,
                     responsive: true,
                     guides: true,
-                    movable: true, // تمكين الحركة لتعديل الموضع
+                    movable: true,
                     rotatable: false,
-                    scalable: true, // تمكين التكبير/التصغير
-                    zoomable: true, // تمكين الزوم
+                    scalable: true,
+                    zoomable: true,
                     zoomOnTouch: true,
                     zoomOnWheel: true,
                     cropBoxMovable: true,
                     cropBoxResizable: true,
-                    minCropBoxWidth: 100, // أصغر حجم مسموح
+                    minCropBoxWidth: 100,
                     minCropBoxHeight: 100,
                     ready() {
                         const containerData = cropper.getContainerData();
                         const aspectRatio = requiredWidth / requiredHeight;
                         
-                        // حساب الحجم الأولي بناءً على حجم الحاوية
                         let initWidth = containerData.width * 0.8;
                         let initHeight = initWidth / aspectRatio;
                         
@@ -58,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         });
                     },
                     crop(event) {
-                        // الحفاظ على النسبة الثابتة أثناء التعديل
                         if (event.detail.width) {
                             const newHeight = event.detail.width / (requiredWidth / requiredHeight);
                             cropper.setCropBoxData({
@@ -98,7 +96,6 @@ document.addEventListener('DOMContentLoaded', function() {
             canvas.width = templateImg.width;
             canvas.height = templateImg.height;
             
-            // الحصول على الصورة المقتطعة
             const croppedCanvas = cropper.getCroppedCanvas({
                 width: requiredWidth,
                 height: requiredHeight,
@@ -107,17 +104,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 imageSmoothingQuality: 'high'
             });
             
-            const posX = canvas.width - requiredWidth - 340;
-            const posY = canvas.height - requiredHeight - 470;
+            const posX = canvas.width - requiredWidth - 380;
+            const posY = canvas.height - requiredHeight - 540;
             
             ctx.drawImage(croppedCanvas, posX, posY, requiredWidth, requiredHeight);
             ctx.drawImage(templateImg, 0, 0);
             
-            // إضافة النص
-            ctx.font = 'bold 40px Arial';
-            ctx.fillStyle = 'blue';
+            ctx.font = 'bold 60px Anton ';
+            ctx.fillStyle = '#06578d';
             ctx.textAlign = 'center';
-            ctx.fillText(nameInput.value, canvas.width / 2, 660); // 400 + 260
+            
+            ctx.fillText(nameInput.value, canvas.width / 2.1, 790);
             
             outputImage.src = canvas.toDataURL('image/png');
             downloadBtn.disabled = false;
