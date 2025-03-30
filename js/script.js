@@ -109,10 +109,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 ctx.drawImage(templateImg, 0, 0);
                 
-                ctx.font = 'bold 28px Poppins';
-                ctx.fillStyle = '#000000';
+                ctx.font = 'bold 40px Arial';
+                ctx.fillStyle = 'blue';
                 ctx.textAlign = 'center';
-                ctx.fillText(nameInput.value, canvas.width / 2, 400);
+                ctx.fillText(nameInput.value, canvas.width / 2, 400 + 260);
                 
                 outputImage.src = canvas.toDataURL('image/png');
                 downloadBtn.disabled = false;
