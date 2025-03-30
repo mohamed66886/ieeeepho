@@ -72,3 +72,20 @@ img{width: 172px;
     max-width: 400px;
     padding: 2rem;
 }
+#imagePreview {
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+
+#previewImage {
+    max-width: 100%;
+    display: block;
+}
+
+.cropper-container {
+    direction: ltr !important; /* لإصلاح الاتجاه */
+}
+
+.cropper-modal {
+    background: transparent !important;
+}
