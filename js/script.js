@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.drawImage(croppedCanvas, posX, posY, requiredWidth, requiredHeight);
             ctx.drawImage(templateImg, 0, 0);
             
-            ctx.font = 'bold 60px Anton ';
+            ctx.font = ' 60px Anton ';
             ctx.fillStyle = '#06578d';
             ctx.textAlign = 'center';
             
