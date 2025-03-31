@@ -56,10 +56,12 @@ main {
 
 }
 main  .container {
-    margin: 0 auto;
+    margin-top:  20px ;
     width: 100%;
     max-width: 960px;
     color: #fff;
+    margin-bottom: 80px;
+
 
 }
 .btn-primary{
