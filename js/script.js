@@ -1,16 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const loadingScreen = document.getElementById('loadingScreen');
-    
-    setTimeout(() => {
-        loadingScreen.style.opacity = '0';
-        
-        setTimeout(() => {
-            loadingScreen.style.display = 'none';
-        }, 500); 
-    }, 2000);
 
-
-});
 document.addEventListener('DOMContentLoaded', function() {
     const uploadInput = document.getElementById('upload');
     const previewImage = document.getElementById('previewImage');
